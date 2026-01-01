@@ -4,8 +4,8 @@ A personal knowledge base of backend development concepts — explained in my ow
 
 ### Categories
 
-- **[📊 Databases](./databases/INDEX.md)**  
-- **[🔐 Authentication & Authorization](./authentication/INDEX.md)**  
+- **[📊 Databases](./Databases/INDEX.md)**  
+- **[🔐 Authentication & Authorization](./Authentication/INDEX.md)**  
 - **[🌐 API Design](./api-design/INDEX.md)**  
 - **[⚡ Caching](./caching/INDEX.md)**  
 - **[🔄 Message Queues](./queues/INDEX.md)**  
