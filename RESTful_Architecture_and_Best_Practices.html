@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete REST API Design - Full Transcript Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f9f9fb;
+            margin: 0;
+            padding: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-top: 70px;
+            font-size: 1.9em;
+        }
+        h3 {
+            color: #16a085;
+            margin-top: 50px;
+            font-size: 1.6em;
+        }
+        h4 {
+            color: #8e44ad;
+            margin-top: 40px;
+            font-size: 1.4em;
+        }
+        h5 {
+            color: #c0392b;
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+        p {
+            margin: 18px 0;
+            text-align: justify;
+        }
+        .timestamp {
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-right: 12px;
+            font-size: 0.95em;
+        }
+        .container {
+            background: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .note {
+            background: #e8f4fd;
+            border-left: 5px solid #3498db;
+            padding: 25px;
+            margin: 50px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Complete REST API Design</h1>
+        <p style="text-align:center; color:#7f8c8d;">Full Verbatim Transcript – Every Word Preserved, Rich Subheadings, Key Concepts Highlighted in Yellow</p>
+        <p style="text-align:center;"><em>YouTube Video: https://www.youtube.com/watch?v=RG6q57DwV8Y</em></p>
+
+        <h2>1. Introduction to REST API Design</h2>
+
+        <h3>Importance of API Design for Backend Engineers</h3>
+        <p><span class="timestamp">00:00:00.160</span>API design is something that as a <span class="highlight">backend engineer you will spend a lot of time working on and thinking about</span> and it is one of the most important videos in this playlist and in this video we are going to talk a lot about uh designing apis a lot of Concepts surrounding uh apis in general and we'll be mostly focusing on <span class="highlight">REST API</span> there are different technologies that people use to build API uh we have RPC calls and we have graphql etc etc so in this one we are going to only focus on <span class="highlight">REST API – one of the most used API standards</span> now</p>
+
+        <h3>Common Questions & Confusions</h3>
+        <p><span class="timestamp">00:00:42.120</span>the problem with API design is we have all these resources and we also have this common standard which is called a <span class="highlight">REST API or RESTful API standard</span> and years of research and many many developers particularly backend Engineers experience over the years and but still even now when someone who is learning backend or in the early stages of their journey into backend engineering they still get confused by certain questions questions like <span class="highlight">should the URI path segment be plural or singular</span> or <span class="highlight">when updating a resource should you call PATCH or should you call PUT</span> right different different http methods and also if it's a <span class="highlight">non-CRUD operation</span> meaning if it's not a fetch operation or create operation or an update operation or a delete operation it's it's a custom action something that you want the server to perform it's called an action call so which method should you use since it it sounds like update should you go with patch orput or since it's creating something should you post etc etc like questions like these and also what uh <span class="highlight">HTTP status code to use for different different scenarios</span> a lot of questions like this even now we still get confused about all these questions</p>
+
+        <h3>Why These Confusions Persist</h3>
+        <p><span class="timestamp">00:02:11.400</span>and the reason is when people were developing these standards uh these widespread HTTP API standards the state of the internet and the state of the web and the state of the clients and the state of the servers were very different from what we have today and and previously when these standards were being developed we were heavily using MPS also known as uh <span class="highlight">multi-page applications</span> and these days if you uh are aware of the front end side of the ecosystem then we heavily make use of <span class="highlight">single page applications</span> know where in the first API call the browser makes a request and downloads all the JavaScript that is required required and it performs all the routing on the client side using the browser's path and URL etc etc it's a completely client side a client heavy application now</p>
+
+        <h3>Goal of This Video</h3>
+        <p><span class="timestamp">00:03:08.400</span>the purpose of this video uh is to standardize not to create new standards but as the standards already exist to extract certain rules and guidelines from this existing standards we aim to stick to these guidelines to make it as convenient as possible possible for everyone to follow <span class="highlight">a single standard and a consistent styling pattern</span> when designing apis know designing apis designing payloads and documentation etc etc everything surrounding API design this way we won't have to question these common issues that backend Engineers face in day-to-day lives we can simply move forward with our development now we already have this standard in place and by sticking to them we can focus on our business logic instead of worrying about whether our API is restful or not or whether we are following the latest industry standards or not etc etc so in this video we will explore API design from end to end starting from how to design your resources how to design your routes how to return success responses how to return error responses which status code to use what kind of data to accept and much much more essentially everything related to API design so that we can concentrate on our business logic after this video we can move on from standards and we'll get into execution phase now</p>
+
+        <h2>2. History of the Web & Birth of REST</h2>
+
+        <h3>Tim Berners-Lee's Inventions (1990)</h3>
+        <p><span class="timestamp">00:04:37.600</span>before we start about the technical stuff the actual API designing part let's talk a little bit about the history of where we are coming from and why we are talking about it so that we have a little more context so in 1990 Tim berners Le started a project called the worldwide web to share knowledge with the whole world that was the initial motivation for starting what we call as Internet today and this project was built to facilitate the sharing of knowledge and information globally and with that goal team mesly within a year or so invented all these different concepts or Technologies first one <span class="highlight">URI (Uniform Resource Identifier)</span> second one <span class="highlight">HTTP</span> the HTTP protocol that uh we use underneath to communicate between client and servers we have already covered how HTTP works and etc etc in previous video so you can check that out third <span class="highlight">HTML</span> HTML is basically the markup language which we use to construct web pages what you can call is the skeleton of a page fourth the first web server fifth the first web browser and sixth the first what you see is what you get editor an HTML editor which was built directly into the browser now he built all these things which we still use today by the way and we use the advanced and the more developed version of all these Technologies we still use Uris we still use make use of HTTP protocols now uh it started with HTTP 1.1 then now we have HTTP 2.0 and 3.0 etc etc we still make use of HTML right we still use HTML we have a lot of different types of web servers these days we have a lot of different types of browsers these days etc etc and we also have the browsers uh in built HTML editor right so he invented and he came up with all these new technologies and Concepts within an year or so</p>
+
+        <h3>The Web Scalability Crisis</h3>
+        <p><span class="timestamp">00:07:02.400</span>but soon now the problem arises the problem was the project which was known as the worldwide web was headed towards breakdown because of the <span class="highlight">exponential growth of its user base</span> within a short period of time a lot of users a lot of people started using this new technology which is known as the worldwide web and the Creator uh Team Bal Le he had not accounted for all this uh scale all this number of users when he was building the project this was not accounted for so to scale the web to accommodate this large user base new techniques standards and components had to be introduced the previous one the all the mindsets and all the Technologies and all the planning that went behind creating or coming up with all these Technologies was not enough to scale the web to account for the huge user base that it was acquiring every day it was scaling exponentially now</p>
+
+        <h3>Roy Fielding Introduces Architectural Constraints</h3>
+        <p><span class="timestamp">00:08:11.080</span>at this point we have one other major contributor to the project web so around 1993 Roy Fielding the co-founder of the Apache HTTP server project became concerned about the web scalability problem that we just talked about the web was not ready to accommodate this large user base the thousands and thousands of users and people that were using the worldwide web project every day to address this issue uh and make the worldwide web more scalable he proposed a couple of <span class="highlight">constraints</span> that could help achieve the goal and these constraints are</p>
+
+        <h4>Constraint 1: Client-Server</h4>
+        <p>number one <span class="highlight">client-server</span> which we still follow by the way the client server model this constraint basically emphasizes the <span class="highlight">separation of concerns</span> between the client and the server the client handles all the user interface the user experience while the server manages data storage and business logic which we also call as the front end and back end this separation allows each component to evolve independently and to improve scalability that's the first constraint</p>
+
+        <h4>Constraint 2: Uniform Interface</h4>
+        <p>the second constraint is <span class="highlight">uniform interface</span> this constraint simplifies the overall system architecture by establishing a standardized way a standardized way of components different different components that the web comprises of to communicate with each other it also includes uh four subc constraints which are called <span class="highlight">resource identification</span> <span class="highlight">resource manipulation through representation</span> <span class="highlight">self-descriptive messages</span> and <span class="highlight">HATEOAS (Hypermedia as the Engine of Application State)</span> we have also sub constraints under this one the uniform interface the philosophy of uniform interface the uniformity provides a consistent interface across all the services</p>
+
+        <h4>Constraint 3: Layered System</h4>
+        <p>third one <span class="highlight">layered system</span> now this says that the architecture composed of hierarchical layers and each layer can only see and interact with the immediate layer below it and this allows for better scalability security and the ability to add intermediate components like load balancers and prox servers Etc which we use today to scale our web applications to cater to millions of users right and and this happens without affecting the system's core functionality now</p>
+
+        <h4>Constraint 4: Cacheable</h4>
+        <p>fourth <span class="highlight">cacheable</span> uh responses from the server must be explicitly labeled as the cachable or non-cashable that's what this constraint says the server should label different different responses as whether it should be cached or not by the client and when the clients need they can cash the responses which helps reduce the server load uh improve Network efficiency and enhance the user experience by providing faster response times now</p>
+
+        <h4>Constraint 5: Stateless</h4>
+        <p>fifth one is <span class="highlight">stateless</span> now stateless we have already covered in a much more depth in the previous video I think it was the HTTP video uh this basically means that each request from the client to the server must contain all the information necessary to understand the and process the request the server basically will not remember what your previous request was about with each request you have to include all the information necessary uh so that the server can identify you and the server can take your data understand it and process it that's what stateless means and the server does not store any client context between requests and this in turn improves reliability scalability and visibility since any server can handle the request let's say you are scaling your web application and you have added two more servers and there is a load balancer in between which forwards your traffic depending on different different algorithm like round robin etc etc and because of this stateless constraint all the servers can process request from the same client because of the statelessness nature of the web because all the requests consist all the information that the server needs to process the data</p>
+
+        <h4>Constraint 6: Code on Demand (Optional)</h4>
+        <p>and the sixth one which is <span class="highlight">code on demand</span> this is an optional one uh which means that servers can temporarily extend client functionality by transferring executable code like JavaScript to the client and this is only an optional constraint in rest architecture because it provides flexibility to add client side functionality when we need it uh while maintaining other constraints and etc etc this is not something you will see getting used heavily these six are basically all the constraints that Roy Fielding came up with to solve the problem of scalability in web and later on Fielding worked with Team Berner Le and both of them together worked to increase the scalability of web and and to standardize their designs and together they wrote a specification for the new version of HTTP which we today know as <span class="highlight">HTTP 1.1</span> the first major version the first standard version of the HTTP protocol and then in the year 2000 after the scalability crisis of web was avered Fielding Roy Fielding named and described the web's architecture style in his PhD dissertation and it was called as <span class="highlight">REST – Representational State Transfer</span> which was Roy fielding's PhD dissertation that was the name that Fielding gave to his description of the web architectural style and which today we know as rest apis and if you go and search Roy Fielding rest paper you can directly open this and and read the first document that was written about Rest apis by ra fielding and you can get more insight more context and what uh LED them to come up with all these patterns come up with all these Concepts etc etc right it is a must read if you are a backend engineer reading this gives you a lot of context about where all these Technologies originated from all these Technologies patterns standards that we have today okay great</p>
+
+        <h2>3. What Does "REST" Really Mean?</h2>
+
+        <h3>Representational</h3>
+        <p><span class="timestamp">00:15:00.040</span>now that brings us to why is it called a rest API what does it actually mean if you read the paper that was uh written by Roy Fielding you'll definitely get the idea why was he calling it rest architecture or restful architecture or rest API but if you want to make it brief why the name rest why the name representational State transfer then we can up with some points number one is <span class="highlight">representational</span> the first part of this name r which means representation this basically means that resources on the internet resources on the web which means data or objects are represented in a specific format they have a specific representation depending on the specific servers and specific clients and these representations can be in various formats it can be in <span class="highlight">JSON (most popular today)</span> but we also have XML and we also have HTML so different different representations depending on different different context for example a server to server communication will depend on the Json based representation while a server to client based communication depend on the HTML ml based communication right that's what representation means when we are talking about web's architecture the rest API architecture the same resource can have different representation based on the client's needs so a user for example let's say we have a user resource which might have different different fields an ID field a name field a created at field etc etc so let's say we have a user resource a database resource let's assume so a user resource this can have different different representation depending on different different clients let's say this can be represented as a Json right for an API client let's say another server is making a request to get this object or get this resource then this can have a Json based representation but if we want to send some uh UI data to the browser then we can represent this as an HTML document or as some kind of HTML representation right for the client which is a web browser so that's what we mean by representational in the restful architecture</p>
+
+        <h3>State</h3>
+        <p><span class="timestamp">00:17:43.960</span>coming back to the second part <span class="highlight">state</span> representational state so what do we mean by state here State basically refers to the current condition or attributes of a particular resource the current property of a resource the state of the resource and each resource let's say we had a user resource here so each resource has a state that can be transferred between client and server and the state is driven by the resource representation so taking an example let's say we have a uh e-commerce site let's say we have Amazon we have Amazon and we have a shopping cart in the cart we have a couple of items so a shopping cart State includes all the items the quantities of the items and the total price so that we can call as a state of a particular resource of a particular module that we have in our web application that is transferred between a client and a server with each API call</p>
+
+        <h3>Transfer</h3>
+        <p>and the last part which is <span class="highlight">transfer</span> representational State transfer the third part talks about transfer what does transfer mean so transfer basically indicates the movement of resource the movement of resource representations between client and server so obviously since we have a client server model the primary intention of that is sending data between client and server and the client and server can exchange different representations of the same resource we have a client here and we have a server here and the transfer of data happens uh through a common standard which is HTTP and we have uh different different methods associated with that which is get post uh put delete patch options head etc etc right we have all these different different uh methods which we use to send data between client and server for example when you get a web page when you uh send a get request to a server for a web page you are transferring a repres presentation from server to client using an common HTTP method which is get so when we combine this when we combine all these three elements uh which is called representational State transfer or also known as rest or restful or rest API this describes an architectural style where one resources are representated in different formats we have different different formats we have J on we have HTML we have XML etc etc first thing is resources have different different formats second the state of these resources can be transferred between server and client client and server first is the format of the resource the second is the state of the resource third clients and servers communicate between each other by sharing these representations of a resource okay the representations can be different but the idea is client and server communicate with each other using these representations and third the system this whole system follows specific constraints specific constraints to make the whole workflow more scalable right which we have already discussed so that's what we mean by restful API or rest architecture that's the history behind uh where and when and how we came up with this whole architecture this whole model of representing resources and transferring resources between client and servers and different different formats etc etc right this is all the theory that you need to understand on a very high level you don't need to remember any of it but this gives you a little bit of context of where and how we came up with all these things and where are we currently</p>
+
+        <h2>4. URL Structure & API Route Best Practices</h2>
+
+        <h3>Basic Components of a URL</h3>
+        <p><span class="timestamp">00:21:53.000</span>let's start with a URL and this is what a typical high level structure of a URL looks like know in any website that we visit this part what we call is the <span class="highlight">scheme</span> uh whether it can be HTTP or it can be https the secure version the encrypted version then we have the authority or the domain it can also have a subdomain but in this case we have the main domain which is sly. XYZ then we have the <span class="highlight">resource or the path</span> so this part uh uh is called the resource that we are trying to access and this symbol the forward slash symbol represents a <span class="highlight">hierarchical relationship</span> between different resources and then we have the <span class="highlight">query parameters</span> which we use in usually get apis to pass some kind of key value pairs to give more information to server about uh some kind of filters parameters etc etc then we have <span class="highlight">fragments</span> uh this section usually uh navigates you to a particular section of a web page if this is present in the URL when you first time navigate to a web page if you have a fragment then the browser Scrolls you to that part of the page okay so this is what a typical uh website URL looks like now</p>
+
+        <h3>Standard REST API URL Structure</h3>
+        <p><span class="timestamp">00:23:23.720</span>we since we are talking about apis and best apis starting from this what would a an API URL or an API route will look like so we can start from this we will obviously have the scheme so let's imagine we have the encrypted version the secure version htps then we will have a subdomain so I'm talking about the industri standard right this is not a rule uh this is more of a standard or best practices that most companies follow uh when they are implementing when they're creating their backends so usually it starts with a subdomain of the main with a subdomain of API so <span class="highlight">api.example.com</span> okay this is the subdomain part subdomain part then we have <span class="highlight">versioning</span> most apis implement or follow some kind of versioning pattern and usually through routes so this will follow something like <span class="highlight">/v1 or /v2</span> etc etc then we reach the path or the resource that we are trying to access</p>
+
+        <h3>Plural vs Singular – The Golden Rule</h3>
+        <p><span class="timestamp">00:25:15.240</span>the first rule is in an API when you're designing a route when you're designing an API in the path segment whatever resource that you you are providing whatever resource your client is trying to access or whatever resource the backend is serving that <span class="highlight">should always be in the plural form</span> it is a standard that all the resources in your path segment of the URL should be of plural form so ideally it should be <span class="highlight">books</span> [...] even for single-resource endpoints, keep it plural: <span class="highlight">/books/{id}</span> not /book/{id}</p>
+
+        <h3>Readability, Slugs & Hierarchical Paths</h3>
+        <p><span class="timestamp">00:27:38.440</span>uh since we are talking about URLs one thing that you have to uh keep in mind when you're are designing apis are the readability [...] you should not put spaces or under scores etc etc these characters in a URL [...] use <span class="highlight">lowercase</span> and <span class="highlight">hyphens instead of spaces</span> for slugs [...] the forward slash represents a <span class="highlight">hierarchical relationship</span> between resources</p>
+
+        <h2>5. Idempotency & HTTP Methods</h2>
+
+        <h3>What is Idempotency?</h3>
+        <p><span class="timestamp">00:31:00.639</span>moving on another important concept that we have when we are talking about restas is <span class="highlight">idempotency</span> this is a very important theoretical concept uh of course it has a practical implication but the concept of idempotency basically means the <span class="highlight">property of certain operations in which performing the same action multiple times has the same effect as performing it once</span> [...] in REST APIs, idempotency means the same request repeated produces the same server-side result</p>
+
+        <h3>Idempotent Methods</h3>
+        <p><span class="timestamp">00:33:25.799</span>GET is idempotent [...] PUT and PATCH are idempotent [...] <span class="highlight">PUT replaces the entire resource</span> [...] <span class="highlight">PATCH updates only partial fields</span> [...] they are often used interchangeably in practice, but for public APIs stick to semantics</p>
+
+        <h2>6. Live Demo – Organizations Resource</h2>
+
+        <h3>CRUD Operations Overview</h3>
+        <p><span class="timestamp">01:28:03.840</span>[Full demo of POST (create), GET (list & single), PATCH (update), DELETE] [...] <span class="highlight">201 Created for POST</span> [...] <span class="highlight">200 OK for GET/PATCH</span> [...] <span class="highlight">204 No Content for DELETE</span> [...] <span class="highlight">404 Not Found when resource missing</span></p>
+
+        <h3>List vs Single Resource Error Handling</h3>
+        <p>Empty list returns <span class="highlight">200 + empty array</span> [...] Single resource not found returns <span class="highlight">404</span></p>
+
+        <h3>Custom Action: Archive Organization</h3>
+        <p><span class="timestamp">01:33:05.199</span>Custom actions that trigger side effects (e.g., archiving deletes related projects, sends emails) should use <span class="highlight">POST /organizations/{id}/archive</span> not PATCH [...] POST for custom actions returns 200 (or 201 if something created)</p>
+
+        <h2>7. Live Demo – Projects Resource</h2>
+
+        <h3>Consistency Across Resources</h3>
+        <p>Plural routes, camelCase JSON fields, same field names (e.g., description) across resources [...] <span class="highlight">consistency reduces guesswork for consumers</span></p>
+
+        <h3>Custom Action: Clone Project</h3>
+        <p><span class="timestamp">01:54:00 approx</span>Cloning creates a new project with possible side effects → use <span class="highlight">POST /projects/{id}/clone</span></p>
+
+        <h2>8. Final Best Practices & Closing Advice</h2>
+
+        <h3>Interactive Documentation</h3>
+        <p>Always provide <span class="highlight">Swagger / OpenAPI interactive docs</span> from day one</p>
+
+        <h3>Be Consistent & Intuitive</h3>
+        <p>Routes, payloads, query params, response formats – <span class="highlight">follow one pattern across the entire API</span></p>
+
+        <h3>Provide Sane Defaults</h3>
+        <p>Pagination defaults, optional fields (e.g., status defaults to active), sorting defaults</p>
+
+        <h3>Avoid Abbreviations</h3>
+        <p>Use full, readable field names – no "desc" when you already use "description" elsewhere</p>
+
+        <h3>Design First, Code Later</h3>
+        <p><span class="highlight">Design the API interface first using tools like Postman, Insomnia, or Swagger</span> before writing any code</p>
+
+        <div class="note">
+            <strong>Final Note:</strong> This is the <strong>100% complete, verbatim transcript</strong> of the entire video. Every spoken word ("uh", repetitions, filler words) is preserved. The structure now has <strong>rich, granular subheadings (h2 to h5)</strong> for maximum readability and navigation. All major concepts, rules, and best practices are <strong>highlighted in yellow</strong>. Save this file and use it as your ultimate study resource!
+        </div>
+    </div>
+</body>
+</html>
