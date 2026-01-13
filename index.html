@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Concepts Browser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 17px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+            margin-bottom: 35px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats h3 {
+            color: #4c51bf;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #5a67d8;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .category {
+            background: rgba(255,255,255,0.97);
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .category h3 {
+            color: #4c51bf;
+            margin-bottom: 18px;
+            font-size: 1.35em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            font-size: 1.6em;
+        }
+
+        .topic {
+            background: #f8f9fa;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 1em;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .topic:hover {
+            background: #edf2ff;
+            border-left-color: #5a67d8;
+            transform: translateX(6px);
+        }
+
+        .topic[data-file]:hover {
+            background: #5a67d8;
+            color: white;
+            border-left-color: white;
+        }
+
+        .topic.new::after {
+            content: "New";
+            position: absolute;
+            top: -6px;
+            right: -10px;
+            background: #e53e3e;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .topic.hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            opacity: 0.85;
+            font-size: 0.95em;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.4em;
+            margin-top: 60px;
+            display: none;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Backend Concepts Hub</h1>
+            <p class="subtitle">Your personal knowledge base for backend engineering excellence</p>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search any backend concept... (controllers, services, repositories, middlewares, request context, validations, auth, serialization, routing, HTTP, backend basics, first principles, REST, caching, roadmap, etc.)">
+        </div>
+
+        <div class="stats">
+            <h3>Total Topics Available</h3>
+            <div class="stat-number" id="topicCount">Loading...</div>
+        </div>
+
+        <div class="categories" id="categoriesContainer"></div>
+
+        <div class="no-results" id="noResults">
+            No matching concepts found. Try different keywords!
+        </div>
+
+        <footer>
+            <p>Last updated: January 2026 • Now includes Roadmap + Backend Basics + First Principles + HTTP + Routing + Serialization + AuthN/AuthZ + Validations + Controllers/Services/Repos • Keep learning, keep shipping 💙</p>
+        </footer>
+    </div>
+
+    <script>
+        const concepts = [
+            {
+                category: "Core Backend Concepts",
+                icon: "⚙️",
+                topics: [
+                    { name: "What is a Backend, how do they work and why do we need them?", file: "backend-basics.html", new: true },
+                    { name: "Why Learn Backend from First Principles?", file: "first-principles-why.html", new: true },
+                    { name: "Authentication and Authorization for Backend Engineers", file: "authn-authz-backend.html", new: true },
+                    { name: "12 Factor App", file: null },
+                    { name: "Business Logic Layer (BLL)", file: null },
+                    { name: "Handlers, Controllers and Services", file: null }
+                ]
+            },
+            {
+                category: "Data Management",
+                icon: "💾",
+                topics: [
+                    { name: "Databases", file: "Database.html" },
+                    { name: "Caching", file: null },
+                    { name: "CRUD Deep Dive", file: null },
+                    { name: "Object Storage and Large Files", file: null },
+                    { name: "Serialization and Deserialization for Backend Engineers", file: "serialization-deserialization.html", new: true },
+                    { name: "Validations and Transformations for Backend Engineers", file: "validations-transformations.html", new: true }
+                ]
+            },
+            {
+                category: "Communication & Integration",
+                icon: "🔗",
+                topics: [
+                    { name: "Understanding HTTP for Backend Engineers", file: "http-for-backend.html", new: true },
+                    { name: "HTTP Protocol", file: null },
+                    { name: "RESTful Architecture and Best Practices", file: "RESTful_Architecture_and_Best_Practices.html" },
+                    { name: "OpenAPI Standards", file: null },
+                    { name: "Webhooks", file: null },
+                    { name: "Transactional Emails", file: null }
+                ]
+            },
+            {
+                category: "Architecture & Design",
+                icon: "🏗️",
+                topics: [
+                    { name: "Middlewares", file: null },
+                    { name: "Request Context", file: null },
+                    { name: "Routing", file: null },
+                    { name: "What is Routing in Backend?", file: "routing-in-backend.html", new: true },
+                    { name: "Controllers, Services, Repositories, Middlewares & Request Context", file: "controllers-services-repos-middlewares-context.html", new: true },
+                    { name: "Error Handling", file: null },
+                    { name: "Validation and Transformation", file: null },
+                    { name: "Config Management", file: null },
+                    { name: "Roadmap for Backend from First Principles", file: "roadmap.html" }
+                ]
+            },
+            {
+                category: "Performance & Scalability",
+                icon: "⚡",
+                topics: [
+                    { name: "Scaling and Performance", file: null },
+                    { name: "Concurrency and Parallelism", file: null },
+                    { name: "Task Queuing and Scheduling", file: null },
+                    { name: "Elasticsearch", file: null }
+                ]
+            },
+            {
+                category: "Operations & Monitoring",
+                icon: "📊",
+                topics: [
+                    { name: "Logging, Monitoring and Observability", file: null },
+                    { name: "DevOps for Backend Engineers", file: null },
+                    { name: "Graceful Shutdown", file: null }
+                ]
+            },
+            {
+                category: "Quality & Security",
+                icon: "🔒",
+                topics: [
+                    { name: "Testing and Code Quality", file: null },
+                    { name: "Security", file: null }
+                ]
+            },
+            {
+                category: "Advanced Topics",
+                icon: "🚀",
+                topics: [
+                    { name: "RealTime Backend Systems", file: null }
+                ]
+            }
+        ];
+
+        const categoriesContainer = document.getElementById('categoriesContainer');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+        const topicCountEl = document.getElementById('topicCount');
+
+        function countTotalTopics() {
+            let total = 0;
+            concepts.forEach(cat => total += cat.topics.length);
+            topicCountEl.textContent = total;
+        }
+
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            
+            concepts.forEach(cat => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                
+                const topicsHTML = cat.topics.map(topic => {
+                    const hasLink = topic.file !== null;
+                    const isNew = topic.new === true;
+                    const cursor = hasLink ? 'cursor: pointer;' : 'cursor: default; opacity: 0.75;';
+                    const dataFile = hasLink ? `data-file="${topic.file}"` : '';
+                    const newBadge = isNew ? 'new' : '';
+                    return `
+                        <div class="topic ${newBadge}" 
+                             data-topic="${topic.name.toLowerCase()}" 
+                             ${dataFile} 
+                             style="${cursor}">
+                            ${topic.name}${hasLink ? ' →' : ''}
+                        </div>`;
+                }).join('');
+                
+                categoryDiv.innerHTML = `
+                    <h3><span class="category-icon">${cat.icon}</span>${cat.category}</h3>
+                    ${topicsHTML}
+                `;
+                
+                categoriesContainer.appendChild(categoryDiv);
+            });
+            
+            // Click handler for linked topics
+            document.querySelectorAll('.topic[data-file]').forEach(topic => {
+                topic.addEventListener('click', function() {
+                    const file = this.getAttribute('data-file');
+                    if (file) {
+                        window.location.href = file;
+                    }
+                });
+            });
+
+            countTotalTopics();
+        }
+
+        function filterTopics(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            const allTopics = document.querySelectorAll('.topic');
+            const allCategories = document.querySelectorAll('.category');
+            let visibleCount = 0;
+
+            if (!term) {
+                allTopics.forEach(t => t.classList.remove('hidden'));
+                allCategories.forEach(c => c.style.display = 'block');
+                noResults.style.display = 'none';
+                return;
+            }
+
+            allCategories.forEach(category => {
+                const topics = category.querySelectorAll('.topic');
+                let hasVisible = false;
+
+                topics.forEach(topic => {
+                    const text = topic.getAttribute('data-topic') || '';
+                    if (text.includes(term)) {
+                        topic.classList.remove('hidden');
+                        hasVisible = true;
+                        visibleCount++;
+                    } else {
+                        topic.classList.add('hidden');
+                    }
+                });
+
+                category.style.display = hasVisible ? 'block' : 'none';
+            });
+
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            filterTopics(e.target.value);
+        });
+
+        // Initial render
+        renderCategories();
+    </script>
+</body>
+</html>
