@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Serialization and Deserialization for Backend Engineers – Full Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.82;
+            color: #1f2937;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+        }
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 2.6rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4ed8;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin: 70px 0 24px;
+            font-size: 2.1rem;
+        }
+        h3 {
+            color: #1e40af;
+            margin: 50px 0 16px;
+            font-size: 1.65rem;
+        }
+        h4 {
+            color: #2563eb;
+            margin: 36px 0 12px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            font-size: 1.07rem;
+            margin: 16px 0;
+        }
+        .highlight {
+            background-color: #fefcbf;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 550;
+        }
+        .key-points {
+            background: #f0f9ff;
+            border-left: 5px solid #3b82f6;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .key-points h4 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        ul.checklist li {
+            margin: 14px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+        ul.checklist li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        .diagram {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 40px 0;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+        .diagram strong {
+            color: #1d4ed8;
+        }
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        footer.note {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Serialization and Deserialization for Backend Engineers</h1>
+    <p class="subtitle">
+        Complete verbatim notes • Every concept, diagram flow & real-world explanation included
+        <br><a href="https://www.youtube.com/watch?v=vzg90tY3uM0" target="_blank">Watch the full video</a>
+    </p>
+
+    <!-- Embedded video -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/vzg90tY3uM0" 
+                title="Serialization and Deserialization for Backend Engineers" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
+    <h2>1. The Core Problem – Different Languages, Same Data</h2>
+
+    <p><span class="timestamp">00:00:00.120</span>what is serialization and deserialization okay let's look at this we have already discussed this that usually we have a client let's say we have this client it's a browser all right it's a browser let's say it's Chrome and this is called front end right in our typical technical language and usually we communicate with a server that's running in your Local Host or it's running somewhere remote in cloud in AWS or gcp or Azure anywhere and the client communicates with the server through some means of network communication it can be through HTTP right our traditional rest API endpoints or it can be through grpc or it can be through websocket we have different means of communications for clients and servers to communicate with each other for this example and throughout the series since we are focusing on HTTP or our traditional rest API style communication let's assume this client is a Javascript app can be a react or angular or view any JavaScript framework or Library it's a Javascript app usually most of the client side apps are built with JavaScript highly interactive app</p>
+
+    <h3>Client (JavaScript) ↔ Server (Rust) Example</h3>
+    <p><span class="timestamp">00:02:36.120</span>in JavaScript let's say we are sending this object right and we have name is some string we are sending this and after we send this in the request body and it reaches the server which is a rust server how does the server take this data and is able to make sense of it it is able to make sense of it in its own format in its own data types because JavaScript and rust have completely different data types JavaScript is a completely Dynamic language it is not compiled on the other side rust is very strict when it comes to types and it is a compiled language the all the data types are completely different from JavaScript so how does this happen how one data type that is transmitted over a network is able to reach another machine that is somewhere else in the internet and it is able to make sense of that data and perform some business logic and send some response and the client is again able to make sense of that response and able to show some UI or perform some business logic</p>
+
+    <div class="diagram">
+        <strong>Visual Flow – Client ↔ Server Data Journey</strong><br><br>
+        JavaScript App (Object) → <strong>Serialize</strong> → JSON String → Network (HTTP) → Rust Server → <strong>Deserialize</strong> → Rust Struct/Object → Business Logic → <strong>Serialize</strong> → JSON Response → Network → JavaScript App → <strong>Deserialize</strong> → JS Object → Render UI
+    </div>
+
+    <h2>2. What Exactly is Serialization?</h2>
+
+    <p><span class="timestamp">00:04:00.920</span>serialization is the process of converting an object or data structure in memory (e.g., a JavaScript object or a Rust struct) into a format that can be transmitted over a network or stored (usually a string or byte stream like JSON, XML, Protobuf, MessagePack)</p>
+
+    <div class="key-points">
+        <h4>Serialization in Action (Client → Server)</h4>
+        <ul class="checklist">
+            <li>JS Object: <code>{ name: "John", age: 30 }</code></li>
+            <li><strong>Serialized</strong> → JSON string: <code>"{\"name\":\"John\",\"age\":30}"</code></li>
+            <li>Sent over HTTP body</li>
+            <li>Rust server receives string → <strong>deserializes</strong> → Rust struct with name & age fields</li>
+        </ul>
+    </div>
+
+    <h2>3. What Exactly is Deserialization?</h2>
+
+    <p><span class="timestamp">00:04:30 approx</span>deserialization is the reverse process: taking the serialized data (string/bytes received over network) and converting it back into a usable object/struct in the receiving language/runtime</p>
+
+    <div class="key-points">
+        <h4>Deserialization in Action (Server → Client)</h4>
+        <ul class="checklist">
+            <li>Rust returns struct → <strong>serialized</strong> → JSON: <code>"{\"users\":[{\"id\":1,\"name\":\"John\"}]}"</code></li>
+            <li>Sent as response body</li>
+            <li>JS receives string → <strong>deserializes</strong> → JS array of objects → renders in UI</li>
+        </ul>
+    </div>
+
+    <h2>4. Why Do We Need Serialization / Deserialization?</h2>
+
+    <h3>Main Reasons</h3>
+    <ul class="checklist">
+        <li><span class="highlight">Different languages/runtimes</span> → JS (dynamic) vs Rust (strict static types) vs Python vs Go etc.</li>
+        <li><span class="highlight">Network transmission</span> → only strings/bytes can travel over HTTP/WebSocket/gRPC</li>
+        <li><span class="highlight">Interoperability</span> → client & server must agree on a common format (most common: JSON)</li>
+        <li><span class="highlight">Persistence & storage</span> → save objects to disk/database in string/byte form</li>
+    </ul>
+
+    <h2>5. JSON as the Most Common Format</h2>
+
+    <p><span class="timestamp">00:18:09.600</span>adhere to a particular standard let's say this is Json and the server has to understand this standard called Json we transmit this the server understands this and returns some data again in Json format</p>
+
+    <div class="diagram">
+        <strong>JSON Flow Across Network Layers</strong><br><br>
+        App Layer (JS/Rust object) → <strong>JSON</strong> → HTTP Layer → TCP/IP Packets → Physical bits → Network → TCP/IP Packets → HTTP Layer → <strong>JSON</strong> → App Layer (Rust/JS object)<br><br>
+        <strong>As backend engineer</strong>: You only care about <strong>JSON</strong> — all lower-layer conversions (packets, frames, bits) are handled by OS/network stack.
+    </div>
+
+    <h2>6. Summary – Mental Model to Remember</h2>
+
+    <p><span class="timestamp">00:21:02.720</span>serialization and deserialization are the techniques using which data is converted into a common format a standard format so that clients can send data to the server in that format and the servers can receive that data make sense of pass it and perform the business logic and send the data again in that common format so that the client can again do the same thing realization and dation are basically dealing with standard format so that data is understandable across domains and language that's all there is to it in serialization and deserialization</p>
+
+    <footer class="note">
+        <strong>Quick Mastery Checklist</strong>
+        <ul class="checklist">
+            <li><strong>Serialization</strong> = object/struct → transmittable format (usually JSON string/bytes)</li>
+            <li><strong>Deserialization</strong> = received string/bytes → usable object/struct</li>
+            <li>Why needed: Different languages, network only understands bytes/strings</li>
+            <li>Most common format today: <strong>JSON</strong> (universal, human-readable)</li>
+            <li>Alternatives (when performance matters): Protobuf, MessagePack, Avro, BSON</li>
+            <li>As backend engineer → you mostly work with JSON → focus on correct parsing/validation</li>
+        </ul>
+        <p>Master this → you’ll never be confused when switching languages or debugging data mismatches.</p>
+    </footer>
+
+</div>
+</body>
+</html>

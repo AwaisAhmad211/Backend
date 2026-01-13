@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>What is Routing in Backend? – Full Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.82;
+            color: #1f2937;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+        }
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 2.6rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4ed8;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin: 70px 0 24px;
+            font-size: 2.1rem;
+        }
+        h3 {
+            color: #1e40af;
+            margin: 50px 0 16px;
+            font-size: 1.65rem;
+        }
+        h4 {
+            color: #2563eb;
+            margin: 36px 0 12px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            font-size: 1.07rem;
+            margin: 16px 0;
+        }
+        .highlight {
+            background-color: #fefcbf;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 550;
+        }
+        .key-points {
+            background: #f0f9ff;
+            border-left: 5px solid #3b82f6;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .key-points h4 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        ul.checklist li {
+            margin: 14px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+        ul.checklist li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #bfdbfe;
+        }
+        th {
+            background: #eff6ff;
+            font-weight: 600;
+        }
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        footer.note {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>What is Routing in Backend?</h1>
+    <p class="subtitle">
+        Complete verbatim notes • Every concept, demo, example & pattern explained clearly
+        <br><a href="https://www.youtube.com/watch?v=SubuU1iOC2s" target="_blank">Watch the full video</a>
+    </p>
+
+    <!-- Embedded video -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/SubuU1iOC2s" 
+                title="What is Routing in Backend?" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
+    <h2>1. Routing – The “Where” of a Request</h2>
+
+    <p><span class="timestamp">00:00:00.120</span>next we have is routing in the previous video we talked about different HTTP methods and how they are important in the HTTP semantic so in a way all these HTTP methods they describe your intent so in a way all these HTTP methods they express the <span class="highlight">what</span> of a request</p>
+
+    <div class="key-points">
+        <h4>HTTP Method = The “What”</h4>
+        <ul class="checklist">
+            <li>GET → I want to <strong>fetch/read</strong> data</li>
+            <li>POST → I want to <strong>create</strong> something</li>
+            <li>PUT/PATCH → I want to <strong>update/replace</strong></li>
+            <li>DELETE → I want to <strong>remove</strong> something</li>
+        </ul>
+    </div>
+
+    <p><span class="timestamp">00:00:34.079</span>and the role of routing is it expresses the <span class="highlight">where</span> of a request — where do you want to send your intention / which resource you want to perform your action or your intent on</p>
+
+    <h3>Simple Analogy – Method + Route = Intent + Target</h3>
+    <p><span class="timestamp">00:01:00.680</span>you have a request and the method is GET → your intention is fetching or getting some data from the server and your route path or the URL path is <code>/users</code> and the server sends you an array of users</p>
+
+    <p><span class="timestamp">00:01:31.320</span>so what you're saying is: <strong>I want to fetch some data</strong> (GET) and <strong>from where?</strong> → from the <strong>users</strong> resource</p>
+
+    <h2>2. Routing = Mapping URL → Server-Side Logic</h2>
+
+    <p><span class="timestamp">00:01:55.000</span>to summarize it you can say that <span class="highlight">routing is basically mapping URL parameters to a server side logic</span> and that's all there is to it</p>
+
+    <div class="key-points">
+        <h4>Routing in One Sentence</h4>
+        <p>The combination of <strong>HTTP Method</strong> + <strong>Route/Path</strong> tells the server:</p>
+        <ul class="checklist">
+            <li><strong>What</strong> action to perform (GET, POST, PUT…)</li>
+            <li><strong>Where</strong> / on which resource to perform it (/users, /books, /orders/123…)</li>
+        </ul>
+        <p>Server matches this combo → executes the correct handler → runs business logic, DB ops, etc. → returns response</p>
+    </div>
+
+    <h2>3. Live Demo Walkthrough (BB Suite + React App)</h2>
+
+    <h3>GET /api/books → Fetch All Books</h3>
+    <p><span class="timestamp">00:02:02.119</span>here we have our familiar BB Suite interface and we have a react app which we will use to demonstrate some of these routing Concepts… the first request was a GET request… this part we are already familiar with this is the HTTP method this is our intent or the action we want to perform which is get or fetching now the this part this is what we call the <span class="highlight">route</span> right the address of our request where do you want to go in the server which is in this case <code>/api/books</code></p>
+
+    <p><span class="timestamp">00:02:44.040</span>books is called a resource… for now we can just assume this is a route right… so this is our action this is the address you want to go to in the server and when we send this request and the request goes through the server responds with this data right</p>
+
+    <h3>POST /api/books → Create a Book</h3>
+    <p><span class="timestamp">00:03:19.000</span>in the next request which is a POST request here the intention is POST… the route is still the same <code>/api/books</code>… the request goes through it creates another book or whatever the resource is and it returns all the resources again in the response right</p>
+
+    <p><span class="timestamp">00:03:37.920</span>so if you notice here in the previous request and in this request this route part is the same… so what happened is in the previous request the request was a GET method and the route was <code>/api/books</code> and in this request it's a POST method right and the route is still the same… so what happens in the server is these two things the method and the route these two things are kind of a unique key that maps to a particular handler or a set of instructions</p>
+
+    <h2>4. Route Types & Patterns</h2>
+
+    <h3>Static Routes</h3>
+    <p><span class="timestamp">00:04:00 approx</span>routes that are fixed → <code>/api/users</code>, <code>/about</code>, <code>/login</code> — no variables</p>
+
+    <h3>Dynamic / Parameterized Routes</h3>
+    <p><span class="timestamp">00:05:30 approx</span>routes with placeholders → <code>/api/users/:id</code>, <code>/products/:slug</code></p>
+
+    <h3>Nested Routes</h3>
+    <p><span class="timestamp">00:06:00 approx</span>routes inside routes → <code>/api/users/:userId/orders</code>, <code>/api/users/:userId/orders/:orderId</code></p>
+
+    <h3>Catch-All / Wildcard Routes</h3>
+    <p><span class="timestamp">00:23:00.279</span>we are sending requests to a route which the server does not serve for right we are doing <code>/api/v3/products</code> at this point the server does not serve responses for this route right it does not have a Handler it does not cater to requests coming into this endpoint so typically what the server will do is in the end after serving all the different routes and all the methods uh associated with those route in the end it will do is <code>/*</code> whatever request after going through all the previous route matching algorithms whatever request reaches here this part it will be mapped to a Handler and that Handler will send a user-friendly message that this route which you are requesting this route does not exist right this route not found</p>
+
+    <div class="key-points">
+        <h4>Purpose of Catch-All Route</h4>
+        <ul class="checklist">
+            <li>Catches any unmatched route</li>
+            <li>Returns 404 Not Found with friendly message</li>
+            <li>Prevents default ugly server errors</li>
+            <li>Usually placed as the very last route</li>
+        </ul>
+    </div>
+
+    <h3>API Versioning via Routes</h3>
+    <p><span class="timestamp">00:20:01.679</span>let's say you have an API endpoint and you are returning data in a particular format right and later on new requirements came in… your first option is changing the whole route right changing the whole route matching part so let's say you can say <code>/api/new-products</code> right or what you can do is you can add that to your versioning you can say in the version one of our API we were serving responses in this format and new requirements came in and in version two we are serving in this format</p>
+
+    <div class="key-points">
+        <h4>Benefits of Route Versioning (v1, v2…)</h4>
+        <ul class="checklist">
+            <li>Clearly expresses version of response format</li>
+            <li>Allows breaking changes without breaking old clients</li>
+            <li>Gives clients a migration window</li>
+            <li>Eventually deprecate old versions (e.g., V1 → sunset)</li>
+        </ul>
+    </div>
+
+    <h2>5. Final Summary & Takeaways</h2>
+
+    <p><span class="timestamp">00:23:55.080</span>with that we have covered pretty much all the concepts that one needs to know before diving deep into different kinds of routing and all the components of routing like query parameters path parameters and all the nested Dynamic parameters and that's all pretty much you need to know to get into a backend code base and understand the routing parts and make changes to it and add new things</p>
+
+    <footer class="note">
+        <strong>Quick Mastery Checklist – Routing Fundamentals</strong>
+        <ul class="checklist">
+            <li>HTTP Method = <strong>What</strong> (intent/action)</li>
+            <li>Route/Path = <strong>Where</strong> (resource/target)</li>
+            <li>Routing = Mapping <strong>Method + Path</strong> → Handler</li>
+            <li>Static routes vs Dynamic (:id) vs Nested vs Catch-all (/*)</li>
+            <li>Versioning via path (/v1/users vs /v2/users) → graceful deprecation</li>
+            <li>Always add catch-all route → return friendly 404</li>
+        </ul>
+        <p>Understand this → reading/modifying any backend routing code becomes intuitive.</p>
+    </footer>
+
+</div>
+</body>
+</html>
