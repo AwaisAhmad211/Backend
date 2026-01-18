@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Full-Text Search & Elasticsearch for Backend Engineers – Full Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.82;
+            color: #1f2937;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+        }
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 2.6rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4ed8;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin: 70px 0 24px;
+            font-size: 2.1rem;
+        }
+        h3 {
+            color: #1e40af;
+            margin: 50px 0 16px;
+            font-size: 1.65rem;
+        }
+        h4 {
+            color: #2563eb;
+            margin: 36px 0 12px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            font-size: 1.07rem;
+            margin: 16px 0;
+        }
+        .highlight {
+            background-color: #fefcbf;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 550;
+        }
+        .key-points {
+            background: #f0f9ff;
+            border-left: 5px solid #3b82f6;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .key-points h4 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        ul.checklist li {
+            margin: 14px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+        ul.checklist li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #bfdbfe;
+        }
+        th {
+            background: #eff6ff;
+            font-weight: 600;
+        }
+        .diagram {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: monospace;
+            white-space: pre;
+            text-align: center;
+            color: #1e40af;
+        }
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        footer.note {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Full-Text Search & Elasticsearch for Backend Engineers</h1>
+    <p class="subtitle">
+        Complete verbatim notes + enhanced explanations, diagrams, demos & best practices
+        <br><a href="https://www.youtube.com/watch?v=7_sovzAhRSM" target="_blank">Watch the full video</a>
+    </p>
+
+    <!-- Embedded video -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/7_sovzAhRSM" 
+                title="Full-Text Search & Elasticsearch for Backend Engineers" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
+    <h2>1. The Problem – Search in Growing Databases (2005 Example)</h2>
+
+    <p><span class="timestamp">00:00:00.160</span>Now imagine this it is 2005 the year 2005 and you are a software engineer and you work basically at a e-commerce based company and the company is rapidly growing because it's 2005 because of the com bubble etc right the company is rapidly growing and you have a task you are a software engineer and you have a task to search through thousands of products your company has around let's say 5,000 products And you have to write a database query to create an API which searches given a user input searches through your database and returns some relevant results. Right? And this is how you write the query for that in a typical relational database based setup. You say select star from products where name is like laptop. So these percentage symbols are for matching any characters that comes before and comes after that.</p>
+
+    <p><span class="timestamp">00:00:55.039</span>Either it can match name or it can match description. If the keyword laptop is either in name or in description, you return those results. Right? This is how you do a basic search and the customers search for laptop. They get a few results and life is very simple. Now something happens since it is 2005 and because of a lot of companies growth your company also grew and it grew rapidly. Suddenly you had millions of products, right? The the very straightforward I like and the person symbol based search in your relational database query that once returned results in let's say 50 milliseconds. Now it is taking 30 seconds and because of that the your customers are frustrated, your manager is frustrated and everyone is asking you to optimize it and you are clueless. They don't just want to make it faster. They also have more requirements. Requirements like can we make the search smarter. For example, when someone searches for laptop, you want to show the most relevant results faster. For example, let's say someone searches laptop, instead of showing a laptop bag, we want to show a MacBook Pro first, right? So that kind of smart searching, relevancebased searching. And we also have a requirement that customers are there in a hurry during the sale time, right? So instead of writing laptop, they are writing laptop pretty frequently. And we also want to take that into account even though they make typos, customers make typos in their user queries, we still want to return relevant results for laptop instead of laptop, right? We want to make it faster. We want to make it relevant. And we also want to be robust enough that typos cannot break us. And with all these requirements, you are clueless. You are a software engineer. You are a backend engineer and you have no idea how to do this.</p>
+
+    <div class="key-points">
+        <h4>2005 Challenge – Scaling Search</h4>
+        <ul class="checklist">
+            <li>Simple LIKE query works for 5k products (50ms)</li>
+            <li>Millions of products → 30s latency → frustrated users</li>
+            <li>Requirements: Faster, relevant ranking, typo-tolerant</li>
+        </ul>
+        <p><strong>Analogy</strong>: LIKE search = scanning phonebook page by page (slow at scale). Full-text search = smart index in back of book (fast, relevant).</p>
+    </div>
+
+    <h2>2. Relational DB Search Limitations – LIKE vs Full-Text</h2>
+
+    <p><span class="timestamp">00:02:50.560</span>Now, let's say you type laptop and it returns laptop bag, right? And it also returns a laptop, but laptop bag is on the top and laptop is on the bottom. And you are thinking, why is this happening? Why is laptop bag on the top? And the answer is because the relational database does not understand the context of the query. It does not understand the relevance of the query. It just matches the string and returns whatever it finds. And it returns in the order it finds. It does not rank the results. It does not understand that laptop is more relevant than laptop bag. It does not understand that. So that's the problem with relational database search.</p>
+
+    <table>
+        <tr style="background:#eff6ff;">
+            <th>LIKE Search (Relational DB)</th>
+            <th>Full-Text Search (ES/Postgres FT)</th>
+        </tr>
+        <tr>
+            <td>Slow at scale (full scan)</td>
+            <td>Fast (inverted index)</td>
+        </tr>
+        <tr>
+            <td>No relevance ranking</td>
+            <td>Ranks by relevance (TF-IDF)</td>
+        </tr>
+        <tr>
+            <td>No typo tolerance</td>
+            <td>Handles typos/fuzzy search</td>
+        </tr>
+        <tr>
+            <td>Simple string match</td>
+            <td>Stemming, synonyms, multi-field</td>
+        </tr>
+    </table>
+
+    <h2>3. Full-Text Search Basics – Inverted Index</h2>
+
+    <p><span class="timestamp">00:05:00 approx</span>Full-text search uses inverted index — maps words to documents/positions. Faster, relevant, typo-tolerant.</p>
+
+    <div class="diagram">
+        Inverted Index Example
+        Document 1: "MacBook Pro laptop"
+        Document 2: "Laptop bag for MacBook"
+        
+        Index:
+        "laptop" → [Doc1: pos3, Doc2: pos1]
+        "macbook" → [Doc1: pos1, Doc2: pos4]
+        "pro" → [Doc1: pos2]
+        "bag" → [Doc2: pos2]
+
+        Query: "laptop" → Matches Doc1 & Doc2, ranks Doc1 higher (relevance)
+    </div>
+
+    <h2>4. Demo – Postgres LIKE vs Elasticsearch</h2>
+
+    <p><span class="timestamp">00:29:00 approx</span>So let's say I want to run a query for the keyword laptop. Now laptop and let's say I hit search. This is our elastic search results, right? How much time it took? It took around 1 second. And our database search it took around 3 seconds. Almost 4 seconds, but 3 seconds. Now run something else. Let's say let's say something only. and we hit search and elastic search results is already ready in 500 milliseconds and it found around 8,000 results. And our database also found the same number of results because to keep it fair, we are kind of keeping the search criteria the same by converting it to lower case and matching any characters that come before and after. Because in this demo, we just want to show the speed, right? Even if we run it one more time again our elastic search results is here in 500 milliseconds and our postcrist search results is still running and it took around 7.5 seconds for the database results to come even though the number of results same the time it takes is significantly larger in a relational database with the I like base syntax</p>
+
+    <div class="key-points">
+        <h4>Demo Takeaways</h4>
+        <ul class="checklist">
+            <li>LIKE (DB) → 3–7s for 8k results</li>
+            <li>Elasticsearch → 500ms–1s</li>
+            <li>DB: No ranking, no typos</li>
+            <li>ES: Relevant, scalable, typo-tolerant</li>
+        </ul>
+    </div>
+
+    <h2>5. When to Use DB Full-Text vs Dedicated Tool (Elasticsearch)</h2>
+
+    <p><span class="timestamp">00:31:07.360</span>you have a use case of any kind of search or type ahead things like that you go ahead with full text search you can go with posgress full case full text search or elastic search a tools like elastic search right there's something as a backend engineer you should have in your arsenal you don't have to master it or anything it is knowing the knowledge of elastic search is not as important as the knowledge of database knowledge of database is something you absolutely have to master you have to master how to work with databases how to optimize them how to understand indexes is every single part of it because that is something that involves almost 99% of your codebase as a backend engineer. But elastic search is something that you can get away with just by copy pasting some snippets from any LLM or any docs. Now, of course, if you want to optimize, you have to read a little more into it. But most of the use cases, most of the examples provided in these docs and in these snippets are pretty much more than enough to cover most of the search based use cases. That's pretty much all about full text search, full text search, and elastic</p>
+
+    <div class="key-points">
+        <h4>Postgres FT vs Elasticsearch</h4>
+        <table>
+            <tr><th>Aspect</th><th>Postgres Full-Text</th><th>Elasticsearch</th></tr>
+            <tr><td>Speed</td><td>Good for small/medium</td><td>Excellent for large scale</td></tr>
+            <tr><td>Complexity</td><td>Simple – in your DB</td><td>Dedicated service, more setup</td></tr>
+            <tr><td>Features</td><td>Basic ranking, stemming</td><td>Advanced ranking, typos, synonyms, geo</td></tr>
+            <tr><td>Use When</td><td>Basic search, no extra infra</td><td>Complex search, high volume</td></tr>
+        </table>
+    </div>
+
+    <h2>6. Final Summary & Best Practices</h2>
+
+    <footer class="note">
+        <strong>Quick Mastery Checklist – Full-Text Search Essentials</strong>
+        <ul class="checklist">
+            <li>LIKE search = slow at scale, no relevance/typos</li>
+            <li>Full-text = inverted index → fast, relevant, robust</li>
+            <li>Use Postgres FT for simple cases</li>
+            <li>Elasticsearch for advanced (ranking, typos, type-ahead)</li>
+            <li>Don't master ES — copy docs/LLM snippets for 80% use</li>
+            <li>Master DB first (99% daily work)</li>
+        </ul>
+        <p>Master search → your e-commerce/search apps become fast & smart.</p>
+    </footer>
+
+</div>
+</body>
+</html>

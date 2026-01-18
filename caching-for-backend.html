@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Caching for Backend Engineers – Full Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.82;
+            color: #1f2937;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+        }
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 2.6rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4ed8;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin: 70px 0 24px;
+            font-size: 2.1rem;
+        }
+        h3 {
+            color: #1e40af;
+            margin: 50px 0 16px;
+            font-size: 1.65rem;
+        }
+        h4 {
+            color: #2563eb;
+            margin: 36px 0 12px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            font-size: 1.07rem;
+            margin: 16px 0;
+        }
+        .highlight {
+            background-color: #fefcbf;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 550;
+        }
+        .key-points {
+            background: #f0f9ff;
+            border-left: 5px solid #3b82f6;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .key-points h4 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        ul.checklist li {
+            margin: 14px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+        ul.checklist li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #bfdbfe;
+        }
+        th {
+            background: #eff6ff;
+            font-weight: 600;
+        }
+        .diagram {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: monospace;
+            white-space: pre;
+            text-align: center;
+            color: #1e40af;
+        }
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        footer.note {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Caching for Backend Engineers</h1>
+    <p class="subtitle">
+        Complete verbatim notes + enhanced explanations, diagrams, real-world examples & best practices
+        <br><a href="https://www.youtube.com/watch?v=estH64OkwxU" target="_blank">Watch the full video</a>
+    </p>
+
+    <!-- Embedded video -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/estH64OkwxU" 
+                title="Caching for Backend Engineers" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
+    <h2>1. What Exactly is Caching? – Simple & Technical Definitions</h2>
+
+    <p><span class="timestamp">00:00:00.240</span>what exactly is caching to simplify it in one sentence caching is a mechanism using which we decrease the amount of time and effort it takes to perform some amount of work that is the on line explanation of what exactly is caching and a more technical definition of that would be caching is basically keeping a subset of some data let's say we have a primary data and when we keep a subset not the whole data a subset of that data depending on the uses of the data the frequency of the uses and the probability of the next uses time etc etc depending on a lot of parameters when you keep a subset of some data in a location which is faster to access which takes less time and also it is easier which means it is it also takes less effort so technically caching is a mechanism using which we can decrease the amount of time and the effort it takes to retrieve or to do some kind of operation</p>
+
+    <div class="key-points">
+        <h4>Caching in One Sentence (Simple)</h4>
+        <ul class="checklist">
+            <li>Mechanism to <span class="highlight">reduce time + effort</span> for repeated work</li>
+        </ul>
+        <h4>Technical Definition</h4>
+        <ul class="checklist">
+            <li>Store <span class="highlight">subset</span> of primary data in <span class="highlight">faster-access location</span></li>
+            <li>Based on <span class="highlight">frequency, probability, recency</span> of use</li>
+            <li>Key factor in high-performance apps (latency in ms/μs)</li>
+        </ul>
+        <p><strong>Analogy</strong>: Kitchen cache = frequently used spices on counter (fast access) vs full pantry (slower). Don't store everything — only what's used often.</p>
+    </div>
+
+    <h2>2. Why Caching is Critical for High-Performance Apps</h2>
+
+    <p><span class="timestamp">00:01:18.360</span>this single mechanism or this single technique is a huge factor in a lot of high performance applications so let's go through a couple of examples and understand where exactly people use caching and how does it exactly impact the performance of the application and how important it is and to give you a hint it is very important at least when it comes to high performance applications which track latency in two digit micros or milliseconds</p>
+
+    <div class="key-points">
+        <h4>Why Cache? – Benefits Explained</h4>
+        <ul class="checklist">
+            <li>Reduces latency (faster responses)</li>
+            <li>Saves compute resources (less CPU/memory)</li>
+            <li>Handles scale (millions of requests without overload)</li>
+            <li>Improves user experience (snappy apps)</li>
+            <li>Cost-effective (less DB/CPU usage = lower cloud bills)</li>
+        </ul>
+    </div>
+
+    <h2>3. Real-World Caching Examples</h2>
+
+    <h3>Example 1: Google Search – Billions of Queries</h3>
+    <p><span class="timestamp">00:02:16.759</span>let's take the example of Google pretty much all of us use or have used Google search in our browsers and what exactly happens when you search some query in Google let's say you type something in Google in the search bar and you hit and enter and that query is processed by Google search engine they have a pretty complex algorithm and workflow which every query goes through that typically involves crawling indexing and ranking billions and billions of web pages and that whole process is pretty expensive and when we say expensive computer tionally expensive right it takes a lot of computing power a lot of CPU a lot of memory resources and etc etc and let's say a query like what is the weather today and queries like these are searched millions and millions of times every day and without caching without implementing this mechanism called caching Google servers they would need to recompute all the results for every single query for every single query involving the current weather of that location and which will lead to a very high latency and of course a very high server load every single query would require going through all the index running all the ranking algorithms and fetching the results which would in turn significantly slow down the response STS</p>
+
+    <p><span class="timestamp">00:03:27.080</span>now when we insert caching in this so what Google does the search engine is it uses it a distributed in memory caching system to store we'll see what is in memory caching system soon but that's how Google does it uses a distributed in memory caching system distributed in the sense the servers of the caching system are spread across the whole world they're not just concentrated in a single location but they are spread across all over the world and those cache servers they store the results whatever results are returned by all those ranking algorithms and all those indexing and crawling algorithms</p>
+
+    <div class="diagram">
+        Google Search Flow With/Without Cache
+        Without Cache:
+        User Query → Crawl/Index/Rank Billions of Pages → Results (slow, high CPU)
+        With Cache:
+        User Query → Check Cache → Hit? Return Results (fast!)
+                          → Miss? Compute + Store in Cache → Results
+    </div>
+
+    <h3>Example 2: CPU Cache – Hardware Level Caching</h3>
+    <p><span class="timestamp">00:04:00 approx</span>let's take the example of CPU cache a typical computer has different different levels of memory we have the primary memory which is also known as RAM or the main memory and we have the secondary memory which is also known as the hard disk or the SSD or whatever the storage that you have in your laptop or in your desktop and the CPU cache is a very small memory which is very close to the CPU unit which is on the same chip as the CPU unit and it is very fast to access as compared to the primary memory or the secondary memory and the CPU cache is used to store frequently accessed data and instructions so that the CPU can access them quickly without having to go to the main memory or the secondary memory</p>
+
+    <div class="diagram">
+        Memory Hierarchy (Speed vs Size)
+        ┌──────────────┐ Fastest (small)
+        │ CPU Cache    │ L1/L2/L3 (ns access)
+        ├──────────────┤
+        │ RAM (Main)   │ ~100ns access
+        ├──────────────┤
+        │ Disk/SSD     │ ms access (slowest, largest)
+        └──────────────┘
+        Cache stores subset of RAM data → reduces time/effort for CPU
+    </div>
+
+    <h3>Example 3: DNS Cache – Domain Resolution</h3>
+    <p><span class="timestamp">00:06:00 approx</span>let's take the example of DNS cache when you type a domain name in your browser let's say you type google.com and you hit enter the browser first checks the local DNS cache to see if it has the IP address of google.com if it does it uses that IP address to connect to the server if it does not it sends a request to the DNS server to get the IP address and then it stores that IP address in the local DNS cache for future use so that the next time you type google.com the browser can directly use the IP address from the cache without having to send a request to the DNS server</p>
+
+    <div class="diagram">
+        DNS Resolution With/Without Cache
+        Without:
+        Browser → DNS Server → IP → Connect (slow first time)
+        With Cache:
+        Browser → Check Local Cache → Hit? Connect (fast!)
+                             → Miss? DNS Server → Store in Cache → Connect
+    </div>
+
+    <h3>Example 4: Browser Cache – Static Assets</h3>
+    <p><span class="timestamp">00:07:00 approx</span>let's take the example of browser cache when you visit a website the browser stores the static assets like images CSS files JavaScript files etc in the browser cache so that the next time you visit the same website the browser can directly use the assets from the cache without having to download them again from the server</p>
+
+    <div class="key-points">
+        <h4>Browser Cache Benefits</h4>
+        <ul class="checklist">
+            <li>Reduces network requests</li>
+            <li>Faster page loads</li>
+            <li>Less bandwidth use</li>
+        </ul>
+    </div>
+
+    <h3>Example 5: Rate Limiting with Cache – API Protection</h3>
+    <p><span class="timestamp">01:00:28.039</span>mostly implemented to avoid uses from Bots let's say if it's a very compute intensive API then rate limiting can help you uh save your resource right save your compute let's say this is the condition you a particular client can only do 50 request in 1 minute let's say 1 minute then whenever a request comes it checks that whatever value it is in the X forwarded for header let's say it find some IP 10 12 some kind of Ip since we are talking about a key Value Store okay it saves some kind of counter say that this is the IP address for this IP address for the start of this minute the first request came I got one request the next time the request comes it checks the cash so far one minute has not passed right that's why it checks and it increases the counter from one it makes two same way 3 4 every time a request comes it increases the counter so that within a minute if the counter exceeds 50 then what it does it blocks that request and it sends an error response of 429 and when we send a status code of 429 it means too many requests too many requests this is how a particular workflow looks like for rate limiting</p>
+
+    <div class="diagram">
+        Rate Limiting Flow with Cache
+        Request → Get IP (X-Forwarded-For)
+        ┌─────────────────────────────┐
+        │ Cache Key: IP:minute:counter │ → Exists? Increment
+        │                              │ → > 50? 429 Too Many Requests
+        └─────────────────────────────┘
+        → Else: Allow request
+        Cache (Redis) = fast, low-latency checks
+    </div>
+
+    <h2>4. In-Memory vs Disk Storage – Why Cache is Fast</h2>
+
+    <p><span class="timestamp">00:04:00 approx</span>cache is a very small memory which is very close to the CPU unit which is on the same chip as the CPU unit and it is very fast to access as compared to the primary memory or the secondary memory</p>
+
+    <table>
+        <tr style="background:#eff6ff;">
+            <th>Storage Type</th>
+            <th>Speed</th>
+            <th>Size</th>
+            <th>Use Case</th>
+        </tr>
+        <tr>
+            <td><strong>In-Memory (RAM)</strong></td>
+            <td>Very fast (~100ns)</td>
+            <td>Small (GBs)</td>
+            <td>Caching frequent data</td>
+        </tr>
+        <tr>
+            <td><strong>Disk (SSD/HDD)</strong></td>
+            <td>Slow (ms)</td>
+            <td>Large (TBs)</td>
+            <td>Primary storage, DBs</td>
+        </tr>
+    </table>
+
+    <h2>5. Redis – Popular In-Memory Cache</h2>
+
+    <p><span class="timestamp">01:02:20.000</span>whenever we are talking about implementing rate limiting we make use of inmemory databases like redis instead of storing it in our relational databases</p>
+
+    <div class="key-points">
+        <h4>Redis Features Explained</h4>
+        <ul class="checklist">
+            <li><span class="highlight">In-memory</span> → super fast (RAM access)</li>
+            <li><span class="highlight">Key-Value store</span> → simple get/set</li>
+            <li>Distributed → scale across machines</li>
+            <li>Persistence optional → AOF/RDB snapshots</li>
+            <li>Structures: strings, hashes, lists, sets, sorted sets</li>
+            <li>Pub/Sub, Lua scripting, expiration/TTL</li>
+        </ul>
+        <p><strong>Why Redis for Caching?</strong> Fast (sub-ms), easy eviction (LRU/LFU), high availability (replication).</p>
+    </div>
+
+    <h2>6. Final Summary & Best Practices</h2>
+
+    <p><span class="timestamp">01:04:44.559</span>some real world examples and why do we use inmemory caches why is it called inmemory cache why Ram primary storage is faster and some real world examples of redis some different components of redis ET ET and that pretty much covers all you need to know to be comfortable with caching to understand caching to understand the context where it is used and what are the different components of it and some real world examples and next you can use all these Technologies you can start with red is the open source alternative V key right and you can depending on your programming language you can install a library and you can get your hand study and see what are the differences in accessing data from a relational database as compared to something like in memory database like redis</p>
+
+    <footer class="note">
+        <strong>Quick Mastery Checklist – Caching Essentials</strong>
+        <ul class="checklist">
+            <li>Caching = <strong>fast access to subset of data</strong> → reduce time/effort</li>
+            <li>Why: Latency, load reduction, scale</li>
+            <li>Examples: Google Search, CPU cache, DNS, Browser cache, Rate limiting</li>
+            <li>In-memory (Redis) vs Disk → RAM fast/small, Disk slow/large</li>
+            <li>Redis: Distributed, key-value, TTL, structures</li>
+            <li>Best practice: Cache frequent/recent data, use eviction (LRU), invalidate on changes</li>
+            <li>Measure: Hit rate >90% ideal</li>
+        </ul>
+        <p>Master caching → your apps become 10x faster & scalable. Start with Redis for practice!</p>
+    </footer>
+
+</div>
+</body>
+</html>
