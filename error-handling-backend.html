@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Error Handling for Backend Engineers – Full Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.82;
+            color: #1f2937;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+        }
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 2.6rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4ed8;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin: 70px 0 24px;
+            font-size: 2.1rem;
+        }
+        h3 {
+            color: #1e40af;
+            margin: 50px 0 16px;
+            font-size: 1.65rem;
+        }
+        h4 {
+            color: #2563eb;
+            margin: 36px 0 12px;
+            font-size: 1.4rem;
+        }
+        p, li {
+            font-size: 1.07rem;
+            margin: 16px 0;
+        }
+        .highlight {
+            background-color: #fefcbf;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-weight: 550;
+        }
+        .key-points {
+            background: #f0f9ff;
+            border-left: 5px solid #3b82f6;
+            padding: 24px;
+            margin: 32px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .key-points h4 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+        ul.checklist {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+        ul.checklist li {
+            margin: 14px 0;
+            padding-left: 32px;
+            position: relative;
+        }
+        ul.checklist li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #bfdbfe;
+        }
+        th {
+            background: #eff6ff;
+            font-weight: 600;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .diagram {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: monospace;
+            white-space: pre;
+            text-align: center;
+            color: #1e40af;
+        }
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        footer.note {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <a class="back-link" href="main.html">← Back to Main Hub</a>
+
+    <h1>Error Handling for Backend Engineers</h1>
+    <p class="subtitle">
+        Complete verbatim notes + enhanced explanations, analogies, diagrams, examples & best practices
+        <br><a href="https://www.youtube.com/watch?v=8NaM_9aKS24" target="_blank">Watch the full video</a>
+    </p>
+
+    <!-- Embedded video -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/8NaM_9aKS24" 
+                title="Error Handling for Backend Engineers" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    </div>
+
+    <h2>1. Mindset – Errors are Inevitable, Be Prepared</h2>
+
+    <p><span class="timestamp">00:00:00.240</span>In the world of back-end development, errors are not just problems to solve. They are a normal part of building applications. And every developer needs to understand that errors will happen. And the key is to being ready for them, being ready to detect them, being ready to fix them. And here is a reality. Your database queries, they will sometimes fail. your external APIs, they will sometimes time out and your users will sometimes send bad data which will break your APIs if you're not ready for them or if you are not expecting them and your business logic will hit unexpected edge cases sometimes. So the question is not whether errors will happen but how you will handle them when they actually do. So in this video there are no tools that I want to talk about. There are no frameworks, there are no examples, code snippets, nothing. It is a mindset. When you are a backend engineer, when you're responsible for executing your core business logic, when you're responsible for making sure every single transaction, every single user activity goes seamlessly. Then you need a particular mindset, a fault tolerant mindset so that you are prepared for the worst and you know how worse it can get and there are some things that you need to keep your eyes on and there are some tips on how to detect them and how to prevent them. What are the best practices people usually implement? whether it's a startup, whether it's a big enterprise or open-source repositories, etc., etc.</p>
+
+    <div class="key-points">
+        <h4>Fault-Tolerant Mindset</h4>
+        <ul class="checklist">
+            <li>Errors = normal → plan for them</li>
+            <li>DB fails, APIs time out, bad data, edge cases</li>
+            <li>Focus: Detect, handle, log, recover</li>
+        </ul>
+        <p><strong>Analogy</strong>: Driving car — errors = potholes. Don't avoid roads, build suspension (handling) + dashboard lights (logging).</p>
+    </div>
+
+    <h2>2. Types of Errors – Explained with Examples</h2>
+
+    <table>
+        <tr style="background:#eff6ff;">
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example</th>
+            <th>Danger</th>
+            <th>How to Handle</th>
+        </tr>
+        <tr>
+            <td><strong>Logic Errors</strong></td>
+            <td>Sneaky — code runs but wrong result</td>
+            <td>E-commerce: Discount applied twice → negative shipping cost</td>
+            <td>Doesn't crash, silent failures</td>
+            <td>Unit tests, logging, monitoring metrics</td>
+        </tr>
+        <tr>
+            <td><strong>Runtime Errors</strong></td>
+            <td>Crash during execution</td>
+            <td>Null pointer, divide by zero</td>
+            <td>App crashes</td>
+            <td>Try-catch, graceful recovery</td>
+        </tr>
+        <tr>
+            <td><strong>System Errors</strong></td>
+            <td>Infra failures</td>
+            <td>Out of memory, DB down</td>
+            <td>Full outage</td>
+            <td>Retries, circuit breakers, alerts</td>
+        </tr>
+    </table>
+
+    <h2>3. Security Risks in Error Handling</h2>
+
+    <p><span class="timestamp">01:05:00 approx</span>we are naively returning error messages they will get an error message saying that your password is incorrect since they are able to find an email for which a user already exists in our platform. Now they are getting an error message which says that your password is incorrect and now they have an email which they know that a particular user exist with this email. Now they can try different different passwords uh common passwords which have better chances of getting a hit and with that they are able to compromise the security of our platform. So just using error messages just using the weakness in our error handling mechanism attackers malicious users can compromise our security and the security of our users.</p>
+
+    <div class="key-points">
+        <h4>Best Practices – Secure Error Messages</h4>
+        <ul class="checklist">
+            <li>Generic messages: "Invalid credentials" (not "Wrong password")</li>
+            <li>No sensitive info in errors</li>
+            <li>Log details internally only</li>
+        </ul>
+    </div>
+
+    <h2>4. Logging – Don't Expose Sensitive Data</h2>
+
+    <p><span class="timestamp">01:07:27.680</span>on a very high level, the idea is try to not expose the sensitive information like user's email, users passwords, their API keys or their credit card numbers, etc., etc. in your logs, logs which you think are limited to your own servers, your own infrastructure, which are not getting leaked to any kind of external malicious user. But that's not how it always works. In most of the major data breaches, what happens since major companies use external services, multiple services to manage their logs because for a particular company which has a fair amount of user traffic, they generate hundreds of GBs of logs every day, right? And they have to use multiple services, storage services, analysis services, observability services, different kinds of services to manage their logs efficiently. So what happens in these major data breaches the company's logs gets leaked and from these logs if they are not following best security practices like not logging users credit card numbers not logging users emails not logging users passwords API keys etc etc that detail gets leaked and hundreds of malicious users have access to them in case of errors let's say authentication error occurs you should not log any sensitive information about the user always log user's ID ID instead of their email and only correlation ID so that you have enough context.</p>
+
+    <div class="key-points">
+        <h4>Logging Best Practices</h4>
+        <ul class="checklist">
+            <li>No sensitive data (emails, passwords, credit cards)</li>
+            <li>Log user ID + correlation ID only</li>
+            <li>Centralized logging services (be careful with breaches)</li>
+        </ul>
+    </div>
+
+    <h2>5. Final Summary & Best Practices</h2>
+
+    <p><span class="timestamp">01:09:05.920</span>That's pretty much all I have to say about error handling and creating fault tolerant systems. This is mostly theory just a couple of ways of looking at systems and making the systems more robust and keeping our mind open for different kinds of errors and different kinds of error handling mechanisms.</p>
+
+    <footer class="note">
+        <strong>Quick Mastery Checklist – Error Handling Mindset</strong>
+        <ul class="checklist">
+            <li>Errors = normal → prepare/detect/fix</li>
+            <li>Types: Logic (silent wrong), Runtime (crashes), System (infra)</li>
+            <li>Secure messages: Generic, no info leak</li>
+            <li>Logs: No sensitive data, use IDs</li>
+            <li>Constantly monitor – alerts for anomalies</li>
+        </ul>
+        <p>Master error handling → your backends become reliable & secure.</p>
+    </footer>
+
+</div>
+</body>
+</html>

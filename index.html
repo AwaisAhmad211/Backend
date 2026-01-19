@@ -127,6 +127,9 @@
             font-size: 1em;
             border-left: 4px solid transparent;
             position: relative;
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
 
         .topic:hover {
@@ -199,7 +202,7 @@
         </div>
 
         <footer>
-            <p>Last updated: January 2026 • Now includes Roadmap + Backend Basics + First Principles + HTTP + Routing + Serialization + AuthN/AuthZ + Validations + Controllers/Services/Repos • Keep learning, keep shipping 💙</p>
+            <p>Last updated: January 2026 • Now includes Roadmap + Backend Basics + First Principles + HTTP + Routing + Serialization + AuthN/AuthZ + Validations + Controllers/Services/Repos + Caching + Background Jobs + Full-Text Search • Keep learning, keep shipping 💙</p>
         </footer>
     </div>
 
@@ -222,7 +225,7 @@
                 icon: "💾",
                 topics: [
                     { name: "Databases", file: "Database.html" },
-                    { name: "Caching", file: "caching-for-backend.html" },
+                    { name: "Caching for Backend Engineers", file: "caching-for-backend.html", new: true },
                     { name: "CRUD Deep Dive", file: null },
                     { name: "Object Storage and Large Files", file: null },
                     { name: "Serialization and Deserialization for Backend Engineers", file: "serialization-deserialization.html", new: true },
@@ -249,8 +252,8 @@
                     { name: "Request Context", file: null },
                     { name: "Routing", file: null },
                     { name: "What is Routing in Backend?", file: "routing-in-backend.html", new: true },
-                    { name: "Controllers, Services, Repositories, Middlewares & Request Context", file: "controllers-services-repos-middlewares-context.html", new: true },
-                    { name: "Error Handling", file: null },
+                    { name: "Controllers, Services, Repositories, Middlewares & Request Context", file: "controllers-services-repos-middlewares-context.html", new: true }, // ← newly added
+                    { name: "Error Handling", file: "error-handling-backend.html" },
                     { name: "Validation and Transformation", file: null },
                     { name: "Config Management", file: null },
                     { name: "Roadmap for Backend from First Principles", file: "roadmap.html" }
@@ -262,8 +265,9 @@
                 topics: [
                     { name: "Scaling and Performance", file: null },
                     { name: "Concurrency and Parallelism", file: null },
-                    { name: "Task queues and background jobs", file: "background-jobs-backend.html" },
-                    { name: "Elasticsearch", file: "full-text-search-elasticsearch.html" }
+                    { name: "Background Jobs for Backend Engineers", file: "background-jobs-backend.html", new: true },
+                    { name: "Task Queuing and Scheduling", file: null },
+                    { name: "Full-Text Search with Elasticsearch", file: "full-text-search-elasticsearch.html", new: true }
                 ]
             },
             {
@@ -313,15 +317,24 @@
                 const topicsHTML = cat.topics.map(topic => {
                     const hasLink = topic.file !== null;
                     const isNew = topic.new === true;
-                    const cursor = hasLink ? 'cursor: pointer;' : 'cursor: default; opacity: 0.75;';
-                    const dataFile = hasLink ? `data-file="${topic.file}"` : '';
                     const newBadge = isNew ? 'new' : '';
+                    const dataTopic = `data-topic="${topic.name.toLowerCase()}"`;
+
+                    if (hasLink) {
+                        return `
+                            <a class="topic ${newBadge}" 
+                               ${dataTopic}
+                               data-file="${topic.file}"
+                               href="${topic.file}">
+                                ${topic.name} →
+                            </a>`;
+                    }
+
                     return `
                         <div class="topic ${newBadge}" 
-                             data-topic="${topic.name.toLowerCase()}" 
-                             ${dataFile} 
-                             style="${cursor}">
-                            ${topic.name}${hasLink ? ' →' : ''}
+                             ${dataTopic}
+                             style="cursor: default; opacity: 0.75;">
+                            ${topic.name}
                         </div>`;
                 }).join('');
                 
