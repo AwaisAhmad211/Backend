@@ -71,6 +71,26 @@
             backdrop-filter: blur(10px);
         }
 
+        .glossary-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #5a67d8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glossary-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.22);
+        }
+
         .stats h3 {
             color: #4c51bf;
             margin-bottom: 12px;
@@ -177,6 +197,191 @@
             display: none;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         }
+
+        .glossary {
+            background: rgba(255,255,255,0.96);
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+            margin-bottom: 35px;
+            backdrop-filter: blur(8px);
+            display: none;
+        }
+
+        .glossary.show {
+            display: block;
+        }
+
+        .glossary-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .glossary-title {
+            color: #4c51bf;
+            font-size: 1.6em;
+        }
+
+        .glossary-subtitle {
+            color: #4a5568;
+            font-size: 1em;
+        }
+
+        .glossary-search {
+            margin: 12px 0 18px;
+        }
+
+        .glossary-search input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .glossary-search input:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90,103,216,0.15);
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .term-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #5a67d8;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .term-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+
+        .term-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+        }
+
+        .term-desc {
+            color: #4a5568;
+            font-size: 0.98em;
+            line-height: 1.5;
+        }
+
+        .term-details-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 0.98em;
+        }
+
+        .term-code {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.92em;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: 10px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 860px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #edf2ff;
+            color: #4c51bf;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.7em;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .modal-tag {
+            display: inline-block;
+            font-size: 0.8em;
+            color: #4c51bf;
+            background: #edf2ff;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .modal-desc {
+            color: #4a5568;
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .term-tag {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.75em;
+            color: #4c51bf;
+            background: #edf2ff;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .glossary-empty {
+            text-align: center;
+            color: #4a5568;
+            font-size: 1.05em;
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -193,6 +398,35 @@
         <div class="stats">
             <h3>Total Topics Available</h3>
             <div class="stat-number" id="topicCount">Loading...</div>
+        </div>
+
+        <div style="text-align:center; margin-bottom: 25px;">
+            <button class="glossary-toggle" id="glossaryToggle">📚 Open Backend Glossary</button>
+        </div>
+
+        <section class="glossary" id="glossarySection">
+            <div class="glossary-header">
+                <h2 class="glossary-title">📚 Backend Glossary</h2>
+                <p class="glossary-subtitle">Short, practical definitions of backend and software engineering terms I’m learning.</p>
+            </div>
+            <div class="glossary-search">
+                <input type="text" id="glossarySearch" placeholder="Search glossary terms... (idempotency, middleware, ORM, caching, etc.)">
+            </div>
+            <div class="glossary-grid" id="glossaryContainer"></div>
+            <div class="glossary-empty" id="glossaryEmpty">No matching terms. Try a different keyword.</div>
+        </section>
+
+        <div class="modal" id="glossaryModal" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true">
+                <button class="modal-close" id="glossaryModalClose">Close ✕</button>
+                <div class="modal-title" id="modalTermTitle"></div>
+                <div class="modal-tag" id="modalTermTag"></div>
+                <div class="modal-desc" id="modalTermDesc"></div>
+                <div class="term-details-title">Detailed explanation</div>
+                <div class="modal-desc" id="modalTermDetail"></div>
+                <div class="term-details-title" style="margin-top: 12px;">Code example</div>
+                <div class="term-code" id="modalTermExample"></div>
+            </div>
         </div>
 
         <div class="categories" id="categoriesContainer"></div>
@@ -300,6 +534,119 @@
         const searchInput = document.getElementById('searchInput');
         const noResults = document.getElementById('noResults');
         const topicCountEl = document.getElementById('topicCount');
+        const glossaryContainer = document.getElementById('glossaryContainer');
+        const glossarySearch = document.getElementById('glossarySearch');
+        const glossaryEmpty = document.getElementById('glossaryEmpty');
+        const glossarySection = document.getElementById('glossarySection');
+        const glossaryToggle = document.getElementById('glossaryToggle');
+        const glossaryModal = document.getElementById('glossaryModal');
+        const glossaryModalClose = document.getElementById('glossaryModalClose');
+        const modalTermTitle = document.getElementById('modalTermTitle');
+        const modalTermTag = document.getElementById('modalTermTag');
+        const modalTermDesc = document.getElementById('modalTermDesc');
+        const modalTermDetail = document.getElementById('modalTermDetail');
+        const modalTermExample = document.getElementById('modalTermExample');
+
+        const glossaryTerms = [
+            {
+                term: "Idempotency",
+                desc: "An operation that can be applied multiple times without changing the final result beyond the first application.",
+                tag: "HTTP",
+                detail: "Important for retries: if a client resends a request, the server should not create duplicates. PUT and DELETE are usually idempotent; POST is typically not.",
+                example: "// Idempotent update (PUT)\nPUT /users/123\n{\"name\": \"Awais\"}\n\n// Same request repeated keeps same final state."
+            },
+            {
+                term: "Middleware",
+                desc: "A function or component that sits between the request and response to add cross‑cutting behavior (auth, logging, etc.).",
+                tag: "Architecture",
+                detail: "Middleware composes multiple concerns without polluting business logic. Order matters: auth usually runs before handlers.",
+                example: "app.use((req, res, next) => {\n  req.context = { requestId: crypto.randomUUID() };\n  next();\n});"
+            },
+            {
+                term: "ORM",
+                desc: "Object‑Relational Mapping: a layer that maps database tables to code objects for easier data access.",
+                tag: "Data",
+                detail: "ORMs improve developer speed but can hide query costs. Always inspect generated SQL for performance-sensitive paths.",
+                example: "const user = await User.findByPk(123);\nuser.name = 'Awais';\nawait user.save();"
+            },
+            {
+                term: "N+1 Query",
+                desc: "A performance issue where one query triggers many additional queries, often due to lazy loading.",
+                tag: "Performance",
+                detail: "Fix by eager loading or batching (JOINs, IN queries, DataLoader).",
+                example: "// Bad: 1 query for posts + N queries for authors\nconst posts = await Post.findAll();\nfor (const p of posts) await User.findByPk(p.authorId);\n\n// Better: eager load\nPost.findAll({ include: [User] });"
+            },
+            {
+                term: "Circuit Breaker",
+                desc: "A resilience pattern that stops repeated failed calls to a dependency and allows recovery.",
+                tag: "Resilience",
+                detail: "Prevents cascading failures. States: closed (normal), open (block calls), half‑open (probe).",
+                example: "if (breaker.isOpen()) return cachedResponse;\nconst res = await breaker.exec(() => http.get(url));"
+            },
+            {
+                term: "Rate Limiting",
+                desc: "Restricting how many requests a client can make in a given time window.",
+                tag: "Security",
+                detail: "Protects APIs from abuse. Common algorithms: token bucket, fixed window, sliding window.",
+                example: "// Pseudocode\nif (tokens[userId] === 0) return 429;\ntokens[userId]--;"
+            },
+            {
+                term: "Cache Invalidation",
+                desc: "The process of refreshing or removing stale cached data to ensure correctness.",
+                tag: "Caching",
+                detail: "Strategies: time-based TTL, write-through, write-behind, cache-aside with explicit invalidation.",
+                example: "// Cache-aside\nconst cached = cache.get(key);\nif (!cached) {\n  const data = await db.get(key);\n  cache.set(key, data, 300);\n}"
+            },
+            {
+                term: "Eventual Consistency",
+                desc: "A consistency model where data may be temporarily inconsistent but will converge over time.",
+                tag: "Distributed Systems",
+                detail: "Used to improve availability and scalability. Clients should handle stale reads.",
+                example: "// Read-after-write may be stale\nawait writeToReplica();\nconst data = await readFromReplica();"
+            },
+            {
+                term: "Payload",
+                desc: "The data sent in a request or response body.",
+                tag: "HTTP",
+                detail: "Payloads should be validated and size-limited to avoid abuse and memory pressure.",
+                example: "POST /orders\n{\"items\":[{\"sku\":\"A1\",\"qty\":2}]}"
+            },
+            {
+                term: "Cold Start",
+                desc: "Initial latency when a service spins up from zero instances (common in serverless).",
+                tag: "Performance",
+                detail: "Mitigate with provisioned concurrency, warmers, or smaller runtimes.",
+                example: "// Keep function warm (conceptual)\nsetInterval(() => pingFunction(), 300000);"
+            },
+            {
+                term: "Migration",
+                desc: "A structured change to the database schema that can be applied and rolled back.",
+                tag: "Data",
+                detail: "Use reversible migrations and deploy in phases to avoid downtime.",
+                example: "-- Add column\nALTER TABLE users ADD COLUMN nickname VARCHAR(50);"
+            },
+            {
+                term: "Retries with Backoff",
+                desc: "Retrying failed requests with increasing delays to reduce load and collisions.",
+                tag: "Resilience",
+                detail: "Use jitter to avoid thundering herd. Cap max retries to avoid overload.",
+                example: "for (let i=0;i<5;i++){\n  try { return await call(); }\n  catch { await sleep(2**i * 100 + rand(0,100)); }\n}"
+            },
+            {
+                term: "Dead Letter Queue",
+                desc: "A queue where messages go after repeated processing failures for later inspection.",
+                tag: "Background Jobs",
+                detail: "Prevents poison messages from blocking the queue. Monitor DLQ size and reprocess safely.",
+                example: "if (attempts > 5) dlq.send(message);"
+            },
+            {
+                term: "Sidecar",
+                desc: "A helper process running alongside a service to provide features like logging or proxying.",
+                tag: "Infrastructure",
+                detail: "Common in Kubernetes: service mesh proxies, log shippers, metrics exporters.",
+                example: "// Service A runs with envoy sidecar for mTLS and routing"
+            }
+        ];
 
         function countTotalTopics() {
             let total = 0;
@@ -393,12 +740,82 @@
             noResults.style.display = visibleCount === 0 ? 'block' : 'none';
         }
 
+        function renderGlossary(terms) {
+            glossaryContainer.innerHTML = '';
+
+            terms.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'term-card';
+                card.setAttribute('data-term', item.term.toLowerCase());
+                card.setAttribute('data-desc', item.desc.toLowerCase());
+
+                card.innerHTML = `
+                    <div class="term-title">${item.term}</div>
+                    <div class="term-desc">${item.desc}</div>
+                    <span class="term-tag">${item.tag}</span>
+                `;
+
+                card.addEventListener('click', () => {
+                    modalTermTitle.textContent = item.term;
+                    modalTermTag.textContent = item.tag;
+                    modalTermDesc.textContent = item.desc;
+                    modalTermDetail.textContent = item.detail;
+                    modalTermExample.textContent = item.example;
+                    glossaryModal.classList.add('show');
+                    glossaryModal.setAttribute('aria-hidden', 'false');
+                });
+
+                glossaryContainer.appendChild(card);
+            });
+
+            glossaryEmpty.style.display = terms.length === 0 ? 'block' : 'none';
+        }
+
+        function filterGlossary(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            const cards = glossaryContainer.querySelectorAll('.term-card');
+            let visible = 0;
+
+            cards.forEach(card => {
+                const t = card.getAttribute('data-term') || '';
+                const d = card.getAttribute('data-desc') || '';
+                const match = t.includes(term) || d.includes(term);
+                card.style.display = match ? 'block' : 'none';
+                if (match) visible++;
+            });
+
+            glossaryEmpty.style.display = visible === 0 ? 'block' : 'none';
+        }
+
         searchInput.addEventListener('input', (e) => {
             filterTopics(e.target.value);
         });
 
+        glossarySearch.addEventListener('input', (e) => {
+            filterGlossary(e.target.value);
+        });
+
+        glossaryToggle.addEventListener('click', () => {
+            const isVisible = glossarySection.classList.toggle('show');
+            glossaryToggle.textContent = isVisible ? '📚 Hide Backend Glossary' : '📚 Open Backend Glossary';
+            if (isVisible) {
+                glossarySearch.focus();
+            }
+        });
+
+        function closeGlossaryModal() {
+            glossaryModal.classList.remove('show');
+            glossaryModal.setAttribute('aria-hidden', 'true');
+        }
+
+        glossaryModalClose.addEventListener('click', closeGlossaryModal);
+        glossaryModal.addEventListener('click', (e) => {
+            if (e.target === glossaryModal) closeGlossaryModal();
+        });
+
         // Initial render
         renderCategories();
+        renderGlossary(glossaryTerms);
     </script>
 </body>
 </html>
